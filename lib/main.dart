@@ -1,3 +1,4 @@
+import 'package:drape_shoppe_crm/providers/home_provider.dart';
 import 'package:drape_shoppe_crm/router/router.dart';
 import 'package:drape_shoppe_crm/utils/secrets.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
     //     dealNo: '20241018124429',
     //   ),
     // );
+
     return MaterialApp.router(
       routerConfig: MyRouter.router(isLoggedIn),
     );
