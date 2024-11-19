@@ -43,6 +43,9 @@ dependencies:
   image_picker: ^1.1.2
   file_picker: ^8.1.4
   get: ^4.6.6
+  path: ^1.9.0
+  dio: ^5.7.0
+  postgres: ^3.4.3
 
 dev_dependencies:
   flutter_test:

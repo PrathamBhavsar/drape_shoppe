@@ -222,7 +222,7 @@ class TableWidget extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => TaskTabScreen(
-                            isNewTask: false, dealNo: task.dealNo),
+                            isNewTask: false, dealNo: 'task.dealNo'),
                       ),
                     );
                   },
@@ -250,7 +250,7 @@ class TableWidget extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => TaskTabScreen(
-                            isNewTask: false, dealNo: task.dealNo),
+                            isNewTask: false, dealNo: 'task.dealNo'),
                       ),
                     );
                   },
@@ -271,7 +271,7 @@ class TableWidget extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => TaskTabScreen(
-                            isNewTask: false, dealNo: task.dealNo),
+                            isNewTask: false, dealNo: 'task.dealNo'),
                       ),
                     );
                   },

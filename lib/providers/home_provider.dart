@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:drape_shoppe_crm/controllers/supabaseController.dart';
 import 'package:drape_shoppe_crm/models/user.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,7 @@ class HomeProvider extends ChangeNotifier {
   static final HomeProvider instance = HomeProvider._privateConstructor();
   HomeProvider._privateConstructor();
 
-  List<String> userNames = [];
+  var userNames = <Map<String, dynamic>>[];
   List<Map<String, dynamic>> priorityValues = [
     {"text": "Low", "color": const Color.fromARGB(255, 182, 255, 220)},
     {"text": "Medium", "color": const Color.fromARGB(255, 254, 254, 226)},
@@ -23,41 +24,13 @@ class HomeProvider extends ChangeNotifier {
   String dealNo = '';
 
   List<Map<String, dynamic>> taskStatus = [
-    {
-      "text": "Pending",
-      "primaryColor": Colors.blue,
-      "secondaryColor": Color(0x660000FF)
-    },
-    {
-      "text": "Closed - lost",
-      "primaryColor": Colors.green,
-      "secondaryColor": Color(0x6600FF00)
-    },
-    {
-      "text": "Closed - won",
-      "primaryColor": Colors.purple,
-      "secondaryColor": Color(0x66800080)
-    },
-    {
-      "text": "Measurement",
-      "primaryColor": Colors.orange,
-      "secondaryColor": Color(0x66FFA500)
-    },
-    {
-      "text": "Quote review",
-      "primaryColor": Colors.teal,
-      "secondaryColor": Color(0x66008080)
-    },
-    {
-      "text": "Site long delay",
-      "primaryColor": Colors.pink,
-      "secondaryColor": Color(0x66FFB6C1)
-    },
-    {
-      "text": "So & advance",
-      "primaryColor": Colors.grey,
-      "secondaryColor": Color(0x66B0B0B0)
-    },
+    {"text": "Pending", "primaryColor": Colors.blue, "secondaryColor": Color(0x660000FF)},
+    {"text": "Closed - lost", "primaryColor": Colors.green, "secondaryColor": Color(0x6600FF00)},
+    {"text": "Closed - won", "primaryColor": Colors.purple, "secondaryColor": Color(0x66800080)},
+    {"text": "Measurement", "primaryColor": Colors.orange, "secondaryColor": Color(0x66FFA500)},
+    {"text": "Quote review", "primaryColor": Colors.teal, "secondaryColor": Color(0x66008080)},
+    {"text": "Site long delay", "primaryColor": Colors.pink, "secondaryColor": Color(0x66FFB6C1)},
+    {"text": "So & advance", "primaryColor": Colors.grey, "secondaryColor": Color(0x66B0B0B0)},
     {
       "text": "Store visit / selection",
       "primaryColor": Colors.amber,
@@ -80,10 +53,9 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> selectedUsers = [];
+  List<Map<String, dynamic>> selectedUsers = [];
 
-  void addSelectedUsers(
-      List<String> users, TextEditingController assignedToController) {
+  void addSelectedUsers(List<Map<String, dynamic>> users, TextEditingController assignedToController) {
     selectedUsers.clear();
     selectedUsers.addAll(users);
     print(selectedUsers);
@@ -98,36 +70,28 @@ class HomeProvider extends ChangeNotifier {
 
   //saves list of fetched taskmodels in a var
   //increaments the values of the home screen data based on the taskmodels
-  Future<void> setAssignedTasks() async {
-
-  }
+  Future<void> setAssignedTasks() async {}
 
   List<Map<String, int>> userTaskList = [];
 
-  Future<void> setTasks() async {
-
-  }
+  Future<void> setTasks() async {}
 
   Map<String, int> userTaskCount = {};
   List<Map<String, int>> userTaskCountList = [];
 
-  Future<void> setIncompleteTasks() async {
-  }
+  Future<void> setIncompleteTasks() async {}
 
   UserModel? currentUser;
 
-  Future<void> getCurrentUser() async {
-
-  }
+  Future<void> getCurrentUser() async {}
 
   Future<void> setControllers(
-      String dealNo,
-      TextEditingController title,
-      TextEditingController desc,
-      TextEditingController assignedTo,
-      TextEditingController designer,
-      ) async {
-  }
+    String dealNo,
+    TextEditingController title,
+    TextEditingController desc,
+    TextEditingController assignedTo,
+    TextEditingController designer,
+  ) async {}
 
   int getPriorityIndexFromText(String priorityValue) {
     for (int index = 0; index < priorityValues.length; index++) {
@@ -150,7 +114,6 @@ class HomeProvider extends ChangeNotifier {
   }
 
   String setDealNo() {
-
     return 'dealNo';
   }
 
@@ -163,6 +126,10 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> getUsers() async {
-
+    userNames.clear();
+    final response = await SupabaseController.instance.getUsers();
+    print(response);
+    userNames.addAll(response!);
+    notifyListeners();
   }
 }

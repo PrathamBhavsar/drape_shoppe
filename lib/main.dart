@@ -2,6 +2,7 @@ import 'package:drape_shoppe_crm/providers/home_provider.dart';
 import 'package:drape_shoppe_crm/router/router.dart';
 import 'package:drape_shoppe_crm/utils/secrets.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -18,7 +19,6 @@ Future<void> main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool? isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
   print(isLoggedIn);
-
   runApp(
     ChangeNotifierProvider(
       create: (context) => HomeProvider.instance,

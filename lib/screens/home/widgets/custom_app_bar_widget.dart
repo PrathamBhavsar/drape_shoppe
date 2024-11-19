@@ -1,12 +1,22 @@
+
 import 'package:drape_shoppe_crm/providers/home_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:provider/provider.dart';
 
-class CustomAppBarWidget extends StatelessWidget {
+class CustomAppBarWidget extends StatefulWidget {
   CustomAppBarWidget({super.key, required this.context});
 
   final BuildContext context;
+
+  @override
+  State<CustomAppBarWidget> createState() => _CustomAppBarWidgetState();
+}
+
+class _CustomAppBarWidgetState extends State<CustomAppBarWidget> {
   TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -29,7 +39,7 @@ class CustomAppBarWidget extends StatelessWidget {
             size: 30,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 20,
         ),
         const Icon(
@@ -38,8 +48,7 @@ class CustomAppBarWidget extends StatelessWidget {
         ),
         Container(
           height: 12,
-          decoration:
-              BoxDecoration(borderRadius: BorderRadiusDirectional.circular(20)),
+          decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(20)),
         ),
       ],
     );
@@ -60,7 +69,7 @@ class CustomAppBarWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Users',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
@@ -80,12 +89,13 @@ class CustomAppBarWidget extends StatelessWidget {
                 Expanded(
                   // Wrap ListView in Expanded to take remaining space
                   child: homeProvider.userNames.isEmpty
-                      ? const Center(
-                          child:
-                              CircularProgressIndicator()) // Loading indicator
+                      ? const Center(child: CircularProgressIndicator()) // Loading indicator
                       : ListView.builder(
                           itemCount: homeProvider.userNames.length,
                           itemBuilder: (context, index) {
+                            String userName =
+                            homeProvider.userNames[index]['name'];
+
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -95,8 +105,8 @@ class CustomAppBarWidget extends StatelessWidget {
                                       width: 12,
                                     ),
                                     Container(
-                                      decoration: const BoxDecoration(
-                                        color: Colors.red,
+                                      decoration:  const BoxDecoration(
+                                        color: Colors.red ,
                                         shape: BoxShape.circle,
                                       ),
                                       height: 40,
@@ -106,14 +116,12 @@ class CustomAppBarWidget extends StatelessWidget {
                                       width: 12,
                                     ),
                                     Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          homeProvider.userNames[index],
+                                        Text(userName,
                                           style: const TextStyle(fontSize: 18),
                                         ),
-                                        const Text('Tasks: 10'),
+                                        const Text("Tasks: 10"),
                                       ],
                                     ),
                                   ],

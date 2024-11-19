@@ -43,8 +43,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   void initState() {
     if (!widget.isNewTask) {
-      HomeProvider.instance.setControllers(widget.dealNo!, titleController,
-          descController, assignedtoController, designerController);
+      HomeProvider.instance.setControllers(widget.dealNo!, titleController, descController,
+          assignedtoController, designerController);
     }
     super.initState();
   }
@@ -57,7 +57,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         forceMaterialTransparency: true,
         title: Text(
           widget.isNewTask ? '' : widget.dealNo.toString(),
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: false,
         actions: [
@@ -69,7 +69,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 isScrollControlled: true,
                 context: context,
                 builder: (context) {
-                  return TaskStatusModalWidget();
+                  return const TaskStatusModalWidget();
                 },
               );
             },
@@ -80,24 +80,21 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: provider.taskStatus[provider.selectedStatusIndex]
-                            ["secondaryColor"]),
+                        color: provider.taskStatus[provider.selectedStatusIndex]["secondaryColor"]),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: [
                           CustomTaskIconWidget(
-                            color: provider
-                                    .taskStatus[provider.selectedStatusIndex]
+                            color: provider.taskStatus[provider.selectedStatusIndex]
                                 ["primaryColor"],
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Text(
-                            provider.taskStatus[provider.selectedStatusIndex]
-                                ["text"],
+                            provider.taskStatus[provider.selectedStatusIndex]["text"],
                             style: TextStyle(
-                                color: provider.taskStatus[provider
-                                    .selectedStatusIndex]["primaryColor"],
+                                color: provider.taskStatus[provider.selectedStatusIndex]
+                                    ["primaryColor"],
                                 fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -131,14 +128,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               hint: Row(
                                 children: [
                                   CustomTaskIconWidget(
-                                    color: provider.priorityValues[provider
-                                        .selectedPriorityIndex]["color"],
+                                    color: provider.priorityValues[provider.selectedPriorityIndex]
+                                        ["color"],
                                   ),
                                   const SizedBox(width: 10),
                                   Text(
-                                    provider.priorityValues[
-                                        provider.selectedPriorityIndex]["text"],
-                                    style: TextStyle(fontSize: 16),
+                                    provider.priorityValues[provider.selectedPriorityIndex]["text"],
+                                    style: const TextStyle(fontSize: 16),
                                   ),
                                 ],
                               ),
@@ -148,8 +144,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               onChanged: (int? newIndex) {
                                 provider.setSelectedPriority(newIndex!);
                               },
-                              items: List.generate(
-                                  provider.priorityValues.length, (index) {
+                              items: List.generate(provider.priorityValues.length, (index) {
                                 final item = provider.priorityValues[index];
                                 return DropdownMenuItem<int>(
                                   value: index,
@@ -161,7 +156,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                       const SizedBox(width: 10),
                                       Text(
                                         item['text'],
-                                        style: TextStyle(fontSize: 16),
+                                        style: const TextStyle(fontSize: 16),
                                       ),
                                     ],
                                   ),
@@ -243,17 +238,17 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            IconButton(
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => CommentsScreen(
-                    dealNo: '',
-                    isNewTask: true,
-                  ),
-                ),
-              ),
-              icon: Icon(Icons.comment_outlined),
-            ),
+            // IconButton(
+            //   onPressed: () => Navigator.of(context).push(
+            //     MaterialPageRoute(
+            //       builder: (context) => CommentsScreen(
+            //         dealNo: '',
+            //         isNewTask: true,
+            //       ),
+            //     ),
+            //   ),
+            //   icon: Icon(Icons.comment_outlined),
+            // ),
             ElevatedButton(
               onPressed: () {
                 showModalBottomSheet(
@@ -262,7 +257,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   isScrollControlled: true,
                   context: context,
                   builder: (context) {
-                    return AttachmentsModelWidget();
+                    return const AttachmentsModelWidget();
                   },
                 );
               },
@@ -275,7 +270,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 backgroundColor: WidgetStateProperty.all(Colors.blueGrey),
                 padding: WidgetStateProperty.all(AppConstants.appPadding),
               ),
-              child: Text(
+              child: const Text(
                 'Add attachments',
                 style: TextStyle(fontSize: 18, color: Colors.white),
               ),
@@ -299,7 +294,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
               child: Text(
                 widget.isNewTask ? 'Create Task' : 'Edit Task',
-                style: TextStyle(fontSize: 18, color: Colors.white),
+                style: const TextStyle(fontSize: 18, color: Colors.white),
               ),
             ),
           ],
@@ -309,10 +304,22 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   void createTask() {
-
+    final HomeProvider homeProvider = HomeProvider.instance;
+    SupabaseController.instance.createTask(
+        homeProvider.selectedUsers,
+        homeProvider.selectedPriority,
+        titleController.text,
+        descController.text,
+        // dueDate,
+        DateTime(2024, 11, 25),
+        designerController.text,
+        'comment',
+        homeProvider.selectedStatus,
+        100,
+        homeProvider.pickedFile,
+        []
+    );
   }
 
-  void editTask() {
-
-  }
+  void editTask() {}
 }

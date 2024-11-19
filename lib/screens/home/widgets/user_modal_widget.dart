@@ -1,12 +1,10 @@
-import 'package:drape_shoppe_crm/controllers/taskController.dart';
 import 'package:drape_shoppe_crm/providers/home_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class UserModalWidget extends StatefulWidget {
   const UserModalWidget({super.key, required this.assignedToController});
-final TextEditingController assignedToController;
+  final TextEditingController assignedToController;
   @override
   State<UserModalWidget> createState() => _UserModalWidgetState();
 }
@@ -14,11 +12,11 @@ final TextEditingController assignedToController;
 class _UserModalWidgetState extends State<UserModalWidget> {
   final FocusNode searchFocusNode = FocusNode();
   final TextEditingController searchController = TextEditingController();
-  final List<String> selectedUsers = []; // List to track selected users
+  final List<Map<String, dynamic>> selectedUsersTemp = []; // List to track selected users
 
   @override
   Widget build(BuildContext context) {
-    final TaskController controller = Get.put(TaskController());
+    final homeProvider = Provider.of<HomeProvider>(context);
 
     return FractionallySizedBox(
       heightFactor: 0.7,
@@ -37,8 +35,7 @@ class _UserModalWidgetState extends State<UserModalWidget> {
                 TextButton(
                   onPressed: () {
                     // Update the HomeProvider with the selected users
-                    // homeProvider.addSelectedUsers(selectedUsers, widget.assignedToController);
-                    print(selectedUsers);
+                    homeProvider.addSelectedUsers(selectedUsersTemp, widget.assignedToController);
 
                     Navigator.of(context).pop(); // Close the modal
                   },
@@ -67,132 +64,67 @@ class _UserModalWidgetState extends State<UserModalWidget> {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: Obx(() {
-                if (controller.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return ListView.builder(
-                  itemCount: controller.userNames.length,
-                  itemBuilder: (context, index) {
-                    String userName = controller.userNames[index]['name'];
-                    bool isSelected = selectedUsers.contains(userName);
+              child: homeProvider.userNames.isEmpty
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                itemCount: homeProvider.userNames.length,
+                itemBuilder: (context, index) {
+                  Map<String, dynamic> userName = homeProvider.userNames[index];
+                  bool isSelected = selectedUsersTemp.contains(userName);
 
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (isSelected) {
-                            selectedUsers.remove(userName); // Deselect
-                          } else {
-                            selectedUsers.add(userName); // Select
-                          }
-                        });
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const SizedBox(width: 12),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? Colors.lightGreen
-                                      : Colors.red,
-                                  shape: BoxShape.circle,
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (isSelected) {
+                          selectedUsersTemp.remove(userName); // Deselect
+                        } else {
+                          selectedUsersTemp.add(userName); // Select
+                        }
+                      });
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const SizedBox(width: 12),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? Colors.lightGreen
+                                    : Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              height: 40,
+                              width: 40,
+                              child: isSelected
+                                  ? const Icon(
+                                Icons.done_rounded,
+                                color: Colors.white,
+                              )
+                                  : null,
+                            ),
+                            const SizedBox(width: 12),
+                            Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  userName['name'],
+                                  style: const TextStyle(fontSize: 18),
                                 ),
-                                height: 40,
-                                width: 40,
-                                child: isSelected
-                                    ? const Icon(
-                                  Icons.done_rounded,
-                                  color: Colors.white,
-                                )
-                                    : null,
-                              ),
-                              const SizedBox(width: 12),
-                              Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    userName,
-                                    style: const TextStyle(fontSize: 18),
-                                  ),
-                                  const Text('Tasks: 10'),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const Divider(), // Divider between each ListTile
-                        ],
-                      ),
-                    );
-                  },
-                );
-              }),
-            )
-            // Expanded(
-            //   child: homeProvider.userNames.isEmpty
-            //       ? const Center(child: CircularProgressIndicator())
-            //       : ListView.builder(
-            //           itemCount: homeProvider.userNames.length,
-            //           itemBuilder: (context, index) {
-            //             String userName = homeProvider.userNames[index];
-            //             bool isSelected = selectedUsers.contains(userName);
-            //
-            //             return GestureDetector(
-            //               onTap: () {
-            //                 setState(() {
-            //                   if (isSelected) {
-            //                     selectedUsers.remove(userName); // Deselect
-            //                   } else {
-            //                     selectedUsers.add(userName); // Select
-            //                   }
-            //                 });
-            //               },
-            //               child: Column(
-            //                 crossAxisAlignment: CrossAxisAlignment.start,
-            //                 children: [
-            //                   Row(
-            //                     children: [
-            //                       const SizedBox(width: 12),
-            //                       Container(
-            //                         decoration: BoxDecoration(
-            //                           color: isSelected
-            //                               ? Colors.lightGreen
-            //                               : Colors.red,
-            //                           shape: BoxShape.circle,
-            //                         ),
-            //                         height: 40,
-            //                         width: 40,
-            //                         child: isSelected
-            //                             ? const Icon(
-            //                                 Icons.done_rounded,
-            //                                 color: Colors.white,
-            //                               )
-            //                             : null,
-            //                       ),
-            //                       const SizedBox(width: 12),
-            //                       Column(
-            //                         crossAxisAlignment:
-            //                             CrossAxisAlignment.start,
-            //                         children: [
-            //                           Text(
-            //                             userName,
-            //                             style: const TextStyle(fontSize: 18),
-            //                           ),
-            //                           const Text('Tasks: 10'),
-            //                         ],
-            //                       ),
-            //                     ],
-            //                   ),
-            //                   const Divider(), // Divider between each ListTile
-            //                 ],
-            //               ),
-            //             );
-            //           },
-            //         ),
-            // ),
+                                const Text('Tasks: 10'),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const Divider(), // Divider between each ListTile
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
